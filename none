@@ -1,0 +1,110 @@
+[1mdiff --git a/trock_pegs_randomizer/src/trock_pegs_randomizer/PegsRandomizer.java b/trock_pegs_randomizer/src/trock_pegs_randomizer/PegsRandomizer.java[m
+[1mindex bdab540..8220ee9 100644[m
+[1m--- a/trock_pegs_randomizer/src/trock_pegs_randomizer/PegsRandomizer.java[m
+[1m+++ b/trock_pegs_randomizer/src/trock_pegs_randomizer/PegsRandomizer.java[m
+[36m@@ -17,18 +17,19 @@[m [mpublic class PegsRandomizer {[m
+ 	private File inputFile;[m
+ 	private RandomAccessFile inputAccessFile;[m
+ 	private RandomAccessFile outputRom;[m
+[31m-	private long seed;[m
+[32m+[m	[32mprivate int seed;[m
+ 	private Boolean outputSpoiler = false;[m
+ 	private Random random;[m
+ 	[m
+[31m-	public PegsRandomizer(String sourceLocation, String outputDirectory, long seed, Boolean outputSpoiler) {[m
+[32m+[m	[32mpublic PegsRandomizer(String sourceLocation, String outputDirectory, int seed, Boolean outputSpoiler) {[m
+ 		this.inputLocation = sourceLocation;[m
+ 		this.inputFile = new File(sourceLocation);[m
+ 		this.outputDirectory = outputDirectory;[m
+[32m+[m		[32mif (seed < 0) { seed *= -1; };[m
+ 		this.seed = seed;[m
+ 		this.outputSpoiler = outputSpoiler;[m
+ 		[m
+[31m-		this.random = new Random(seed);[m
+[32m+[m		[32mthis.random = new Random((long) seed);[m
+ 		[m
+ 		if (!this.inputFile.exists()) {[m
+ 			System.out.println("Could not find file: " +  sourceLocation);[m
+[36m@@ -39,7 +40,6 @@[m [mpublic class PegsRandomizer {[m
+ 			this.inputAccessFile = new RandomAccessFile(inputFile, "r");[m
+ 			Files.copy(Path.of(this.inputLocation), Path.of(this.outputDirectory + "\\TR_Pegs_Randomizer v" + PegsRandomizer.version + " - " + this.seed + " " + this.inputFile.getName()));[m
+ 			this.outputRom = new RandomAccessFile(this.outputDirectory + "\\TR_Pegs_Randomizer v" + PegsRandomizer.version + " - " + this.seed + " " + this.inputFile.getName(), "rw");[m
+[31m-			[m
+ 		} catch (IOException e) {[m
+ 			e.printStackTrace();[m
+ 		}[m
+[36m@@ -56,18 +56,18 @@[m [mpublic class PegsRandomizer {[m
+ 	}[m
+ 	[m
+ 	protected void randomizePegs() {[m
+[32m+[m		[32mint[] pegOrder = {0,1,2};[m
+[32m+[m		[32mString[] pegSpoiler = {"Right", "Up", "Left"};[m
+ 		byte[][] pegValues = {{(byte) 0x26, (byte) 0x08}, {(byte) 0xA0, (byte) 0x05}, {(byte) 0x1A, (byte) 0x08}};[m
+ 		[m
+[31m-		ArrayUtils.shuffle(pegValues, random);[m
+[32m+[m		[32mArrayUtils.shuffle(pegOrder, random);[m
+ 		[m
+[31m-		writeOffset(pegValues[0], 0x267A1);[m
+[31m-		writeOffset(pegValues[1], 0x267A3);[m
+[31m-		writeOffset(pegValues[2], 0x267A5);[m
+[32m+[m		[32mwriteOffset(pegValues[pegOrder[0]], 0x267A1);[m
+[32m+[m		[32mwriteOffset(pegValues[pegOrder[1]], 0x267A3);[m
+[32m+[m		[32mwriteOffset(pegValues[pegOrder[2]], 0x267A5);[m
+ 		[m
+ 		if (outputSpoiler) {[m
+[31m-			System.out.println(pegValues[0][0]);[m
+[31m-			System.out.println(pegValues[1][0]);[m
+[31m-			System.out.println(pegValues[2][0]);[m
+[32m+[m			[32mSystem.out.println("Peg order: " + pegSpoiler[pegOrder[0]] + " " + pegSpoiler[pegOrder[1]] + " " + pegSpoiler[pegOrder[2]]);[m
+ 		}[m
+ 	}[m
+ 	[m
+[36m@@ -82,7 +82,7 @@[m [mpublic class PegsRandomizer {[m
+ 	[m
+ 	public static void main(String[] args) {[m
+ 		if (args.length < 2) {[m
+[31m-			System.out.println("Args: input_file output_directory");[m
+[32m+[m			[32mSystem.out.println("Args:\n    input_file - An A Link to the Past JP 1.0 rom, randomized or otherwise\n    output_directory - The directory to write the modified rom to\n    --spoiler - If present, a spoiler log will be outputted\n    --seed (seed) - If present, specifies the seed to be used for generation");[m
+ 			return;[m
+ 		}[m
+ 		[m
+[36m@@ -90,25 +90,25 @@[m [mpublic class PegsRandomizer {[m
+ 		String outputFileDirectory = "";[m
+ 		Boolean spoiler = false;[m
+ 		Boolean customSeed = false;[m
+[31m-		long seed = 0;[m
+[32m+[m		[32mint seed = 0;[m
+ 		[m
+[31m-		for (int i = 0; i < args.length; i++) {[m
+[31m-			if (args[i] == "--spoiler") {[m
+[31m-				spoiler = true;[m
+[31m-			} else if (args[i] == "--seed") {[m
+[31m-				customSeed = true;[m
+[31m-				seed = Long.parseLong(args[++i]);[m
+[31m-			} else {[m
+[31m-				if (sourceFileLocation.equals("")) {[m
+[31m-					sourceFileLocation = args[i];[m
+[31m-				} else {[m
+[31m-					outputFileDirectory = args[i];[m
+[31m-				}[m
+[32m+[m		[32msourceFileLocation = args[0];[m
+[32m+[m		[32moutputFileDirectory = args[1];[m
+[32m+[m[41m		[m
+[32m+[m		[32mfor (int i = 2; i < args.length; i++) {[m
+[32m+[m			[32mswitch (args[i]) {[m
+[32m+[m				[32mcase "--spoiler":[m
+[32m+[m					[32mspoiler = true;[m
+[32m+[m					[32mbreak;[m
+[32m+[m				[32mcase "--seed":[m
+[32m+[m					[32mcustomSeed = true;[m
+[32m+[m					[32mseed = Integer.parseInt(args[++i]);[m
+[32m+[m					[32mbreak;[m
+ 			}[m
+ 		}[m
+ 		[m
+ 		if (!customSeed) {[m
+[31m-			seed = new Random().nextLong();[m
+[32m+[m			[32mseed = new Random().nextInt();[m
+ 		}[m
+ 		[m
+ 		PegsRandomizer randomizer = new PegsRandomizer(sourceFileLocation, outputFileDirectory, seed, spoiler);[m

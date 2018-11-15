@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1542250471952
+Build-Jdk: 11
+Built-By: Family
+Bundle-Description: Apache Commons Lang, a package of Java utility class
+ es for the  classes that are in java.lang's hierarchy, or are considere
+ d to be so  standard as to justify existence in java.lang.
+Bundle-DocURL: http://commons.apache.org/proper/commons-lang/
+Bundle-License: https://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Apache Commons Lang
+Bundle-SymbolicName: org.apache.commons.lang3
+Bundle-Vendor: The Apache Software Foundation
+Bundle-Version: 3.8.1
+Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-3.5.0.201709291849

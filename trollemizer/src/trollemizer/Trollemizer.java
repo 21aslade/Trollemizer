@@ -23,7 +23,7 @@ public class Trollemizer {
 	private String outputName;
 	
 	public Trollemizer() {
-		//TODO - Add an actual constructor that does something
+		random = new Random();
 	}
 	
 	public void randomize(int seed, String inputRomDirectory, String outputDirectory, String outputName, Boolean randomizeTRPegs, Boolean randomizeItemGFX) {
@@ -56,6 +56,7 @@ public class Trollemizer {
 			outputBuffer = Files.readAllBytes(Path.of(location));
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}
@@ -68,8 +69,12 @@ public class Trollemizer {
 		this.outputName = name;
 	}
 	
-	public void setSeed(int seed) {
-		this.seed = seed;
+	public void setSeed(int newSeed) {
+		if (newSeed < 0) {
+			newSeed *= -1;
+		}
+		
+		this.seed = newSeed;
 		random.setSeed(this.seed);
 	}
 	
@@ -78,7 +83,7 @@ public class Trollemizer {
 	}
 	
 	public void writeRom() {
-		String filePath = this.outputDirectory + this.outputName + " " + this.inputFile.getName();
+		String filePath = this.outputDirectory + "\\" + this.outputName + " " + this.inputFile.getName();
 		File outputRomFile = new File(filePath);
 		
 		if (!outputRomFile.exists()) {
