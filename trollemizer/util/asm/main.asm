@@ -18,11 +18,7 @@ org $368000
 RandomizeBombs:
 db $00
 
-; Flag to indicate... something temporary
-;SecretTempFlag:
-;db $00
-
-; Flag to indicate... something permanent
+; Flag to indicate whether super lonk should be enabled or not
 ActivateSuperLonk:
 db $01
 

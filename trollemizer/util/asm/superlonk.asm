@@ -32,7 +32,7 @@ DashBlock: {
 
 ItemBlock: {
     LDA ActivateSuperLonk : BEQ .disabled ; Use vanilla behavior if the flag is zero
-    LDA !SWORD_USE : AND #$01 : BNE .noitem ; If the sword use flag is set, don't use item. This is still a BEQ, for some reason.
+    LDA !SWORD_USE : AND #$01 : BNE .noitem ; If the sword use flag is set, don't use item.
 .disabled
     LDA $3C : BEQ .zero ; If it's zero, BCC triggers, which we don't want
     RTL

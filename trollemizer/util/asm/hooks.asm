@@ -1,6 +1,3 @@
-;org $008889
-;JSL TemporaryLabel : NOP
-
 org $079ABA
 JSL SwordSwingBlock : NOP : NOP
 
